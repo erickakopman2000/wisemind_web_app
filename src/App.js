@@ -1,5 +1,6 @@
 import React from "react";
 import "./styles/App.scss";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 //Components
 import Home from "./components/Home";
@@ -7,7 +8,11 @@ import Home from "./components/Home";
 function App() {
   return (
     <div className="App">
-      <Home />
+      <Router>
+        <Switch>
+          <Route path="/" exact component={Home} />
+        </Switch>
+      </Router>
     </div>
   );
 }
