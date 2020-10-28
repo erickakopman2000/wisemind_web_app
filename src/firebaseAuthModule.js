@@ -7,7 +7,7 @@ export const signup = (email, pass, notify_email_verification) => {
     .then(() => {
       let user = firebase.auth().currentUser;
 
-      //Email verification
+      //* Email verification
       if (user !== null && user.emailVerified === false)
         user.sendEmailVerification().then(() => notify_email_verification());
     })
@@ -26,7 +26,7 @@ export const signin = async (
     .catch((err) => console.log(err.code, err.message));
 
   let user = firebase.auth().currentUser;
-  //   if (user !== null) console.log("Signed In", user.uid);
+  // //  if (user !== null) console.log("Signed In", user.uid);
   user !== null ? notify_signin_success() : notify_signin_failure();
 };
 
