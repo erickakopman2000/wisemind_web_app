@@ -1,5 +1,6 @@
 import React from "react";
 import "./styles/App.scss";
+import firebase from "./firebase";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 
 // Pages
@@ -14,7 +15,9 @@ function App() {
       <Router>
         <Switch>
           <Route path="/" exact component={Home} />
-          <Route path="/auth" component={Authentication} />
+          {firebase.auth().currentUser === null && (
+            <Route path="/auth" component={Authentication} />
+          )}
         </Switch>
       </Router>
     </div>
