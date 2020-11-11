@@ -39,3 +39,11 @@ export const signout = (notify_signout_success) => {
       (err) => console.log("Sign out error", err)
     );
 };
+
+export const setPassResetEmail = (email, emailSent) => {
+  firebase
+    .auth()
+    .sendPasswordResetEmail(email)
+    .then(() => emailSent())
+    .catch((err) => console.log(err));
+};

@@ -4,6 +4,8 @@ import React from "react";
 import Body from "../components/Body";
 
 export default function Home() {
+  console.log(JSON.parse(localStorage.getItem("currentUser")));
+
   return (
     <div className="HomePage">
       <Body />

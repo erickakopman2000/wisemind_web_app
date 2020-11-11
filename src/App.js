@@ -12,6 +12,7 @@ import {
 import Header from "./components/Header";
 import Home from "./pages/Home";
 import Authentication from "./pages/Authentication";
+import Profile from "./pages/Profile";
 
 function App() {
   const [user, setUser] = useState(
@@ -31,12 +32,13 @@ function App() {
         <Switch>
           <Route path="/" exact component={Home} />
           <Route path="/auth">
-            {user == null ? (
+            {user === null ? (
               <Authentication user={user} setUser={setUserState} />
             ) : (
               <Redirect to="/" />
             )}
           </Route>
+          <Route path="/profile/:id" component={Profile} />
         </Switch>
       </Router>
     </div>

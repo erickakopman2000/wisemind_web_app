@@ -1,9 +1,22 @@
+@import "config";
 .AuthenticationPage {
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 100vh;
   overflow-x: hidden;
+
+  .signupDiv {
+    position: relative;
+    transition: 1s ease all;
+    left: 0%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: -500px;
+    overflow-x: hidden;
+  }
 
   .form {
     display: flex;
@@ -43,7 +56,7 @@
       height: 55px;
       border: none;
       color: white;
-      background: gray;
+      background: $btnColor;
       border-radius: 20px;
     }
 
@@ -58,7 +71,37 @@
   left: 0%;
 }
 
-.signupForm {
-  margin-top: -85.65vh;
+.signupTitle {
+  margin-top: 0px;
+}
+
+.signup1 {
   left: 0%;
+}
+
+.signup2 {
+  margin-top: -410px;
+  right: -200%;
+}
+
+.signup3 {
+  margin-top: -410px;
+  right: -200%;
+}
+
+.signup4 {
+  margin-top: -400px;
+  right: -200%;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .imgPreviewer {
+    background: gray;
+    border-radius: 50%;
+  }
 }
