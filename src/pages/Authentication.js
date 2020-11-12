@@ -5,9 +5,12 @@ import firebase from "../firebase";
 export default function Authentication({ user, setUser }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [username, setUsername] = useState("");
+  const [profileImage, setProfileImage] = useState(null);
   const [confirmEmail, setConfirmEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [loginView, setLoginView] = useState(false);
+  const [loginView, setLoginView] = useState(true);
 
   const [signupView, setSignupView] = useState(0);
   console.log(signupView);
@@ -27,6 +30,14 @@ export default function Authentication({ user, setUser }) {
       },
       () => console.log("Signin failed")
     );
+  };
+
+  const imagePreviewHandler = (e) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) setProfileImage(reader.result);
+    };
+    reader.readAsDataURL(e.target.files[0]);
   };
 
   const handleSignup = (e) => {
@@ -60,9 +71,12 @@ export default function Authentication({ user, setUser }) {
       style={!loginView ? { overflowX: "hidden" } : {}}
     >
       <form
-        onSubmit={handleSignup}
         className="form loginForm"
-        style={loginView ? {} : { left: "-100%" }}
+        style={
+          loginView
+            ? { top: "50px", margin: 0 }
+            : { top: "50px", left: "-100%" }
+        }
         onSubmit={handleLogin}
       >
         <h1>Login</h1>
@@ -198,10 +212,14 @@ export default function Authentication({ user, setUser }) {
         >
           <div style={{ textAlign: "center" }}>
             <h3>Take a Photo</h3>
-            <div
-              style={{ height: 200, width: 200 }}
-              className="imgPreviewer"
-            ></div>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={imagePreviewHandler}
+            />
+            <div style={{ height: 200, width: 200 }} className="imgPreviewer">
+              <img src={profileImage} alt="profile" />
+            </div>
           </div>
           <button onChange={() => setSignupView(4)}>Next</button>
         </form>
