@@ -81,7 +81,6 @@ export default function Authentication({ user, setUser }) {
       >
         <h1>Login</h1>
         <div>
-          <h3>Email</h3>
           <input
             value={email}
             type="email"
@@ -91,7 +90,6 @@ export default function Authentication({ user, setUser }) {
         </div>
 
         <div>
-          <h3>Password</h3>
           <input
             value={password}
             type="password"
@@ -121,13 +119,14 @@ export default function Authentication({ user, setUser }) {
 
       <div style={loginView ? { left: "100%" } : {}} className="signupDiv">
         <h1 className="signupTitle ">Sign Up</h1>
+        <p className="message">What's your email?</p>
         <form
           onSubmit={handleSignup}
           className="form signup1"
           style={signupView === 0 ? {} : { left: "-200%" }}
         >
           <div>
-            <h3>Email</h3>
+            {/* <h3>Email</h3> */}
             <input
               value={email}
               type="email"
@@ -137,12 +136,12 @@ export default function Authentication({ user, setUser }) {
           </div>
 
           <div>
-            <h3>Confirm Email</h3>
+            {/* <h3>Confirm Email</h3> */}
             <input
               value={confirmEmail}
               type="email"
               onChange={(e) => setConfirmEmail(e.target.value)}
-              placeholder="Email"
+              placeholder="Confirm Email"
             />
           </div>
 
@@ -161,7 +160,6 @@ export default function Authentication({ user, setUser }) {
           }
         >
           <div>
-            <h3>Password</h3>
             <input
               value={password}
               type="password"
@@ -171,12 +169,11 @@ export default function Authentication({ user, setUser }) {
           </div>
 
           <div>
-            <h3>Confirm Password</h3>
             <input
               value={confirmPassword}
               type="password"
               onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Password"
+              placeholder="Confirm Password"
             />
           </div>
           <button onChange={() => setSignupView(2)}>Next</button>
@@ -194,13 +191,21 @@ export default function Authentication({ user, setUser }) {
           }
         >
           <div>
-            <h3>Name</h3>
-            <input value={password} type="text" placeholder="Password" />
+            <input
+              value={name}
+              type="text"
+              placeholder="Enter your name"
+              onChange={(e) => setName(e.target.value)}
+            />
           </div>
 
           <div>
-            <h3>Username</h3>
-            <input value={confirmPassword} type="text" placeholder="Password" />
+            <input
+              value={username}
+              type="text"
+              placeholder="Choose a username"
+              onChange={(e) => setUsername(e.target.value)}
+            />
           </div>
           <button onChange={() => setSignupView(3)}>Next</button>
         </form>
@@ -211,15 +216,19 @@ export default function Authentication({ user, setUser }) {
           style={signupView === 3 ? { right: "0%" } : {}}
         >
           <div style={{ textAlign: "center" }}>
-            <h3>Take a Photo</h3>
+            <div style={{ height: 200, width: 200 }} className="imgPreviewer">
+              <img
+                style={profileImage ? {} : { zIndex: -1 }}
+                src={profileImage}
+                alt="profile"
+              />
+            </div>
             <input
               type="file"
               accept="image/*"
               onChange={imagePreviewHandler}
             />
-            <div style={{ height: 200, width: 200 }} className="imgPreviewer">
-              <img src={profileImage} alt="profile" />
-            </div>
+            <h3>{!profileImage ? "Choose a profile image" : ""}</h3>
           </div>
           <button onChange={() => setSignupView(4)}>Next</button>
         </form>
