@@ -15,6 +15,25 @@ export default function Authentication({ user, setUser }) {
   const [signupView, setSignupView] = useState(0);
   console.log(signupView);
 
+  let message;
+
+  switch (signupView) {
+    case 0:
+      message = "First, what's your email?";
+      break;
+    case 1:
+      message = "Okay, now choose a password.";
+      break;
+    case 2:
+      message = "What do you call yourself?";
+      break;
+    case 3:
+      message = "Lastly, pick a profile picture.";
+
+    default:
+      break;
+  }
+
   const handleLogin = (e) => {
     e.preventDefault();
     // signin to firebase
@@ -117,110 +136,83 @@ export default function Authentication({ user, setUser }) {
         </h4>
       </form>
 
-      <div style={loginView ? { left: "100%" } : {}} className="signupDiv">
-        <h1 className="signupTitle ">Sign Up</h1>
-        <p className="message">What's your email?</p>
-        <form
-          onSubmit={handleSignup}
-          className="form signup1"
-          style={signupView === 0 ? {} : { left: "-200%" }}
-        >
-          <div>
-            {/* <h3>Email</h3> */}
-            <input
-              value={email}
-              type="email"
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-            />
+      <form
+        className="form signupForm"
+        style={loginView ? { right: "-200%" } : { marginTop: "-534px" }}
+        onSubmit={handleLogin}
+      >
+        <h1>Sign Up</h1>
+
+        <p className="message">{message}</p>
+
+        <div className="signUpDiv">
+          <div
+            className="inputGroup1"
+            style={signupView === 0 ? {} : { left: "-200%" }}
+          >
+            <div>
+              <input type="email" placeholder="Email" />
+            </div>
+            <div>
+              <input type="text" placeholder="Confirm Email" />
+            </div>
           </div>
 
-          <div>
-            {/* <h3>Confirm Email</h3> */}
-            <input
-              value={confirmEmail}
-              type="email"
-              onChange={(e) => setConfirmEmail(e.target.value)}
-              placeholder="Confirm Email"
-            />
+          <div
+            className="inputGroup2"
+            style={
+              signupView === 1
+                ? { right: "0%" }
+                : signupView > 1
+                ? { right: "200%" }
+                : {}
+            }
+          >
+            <div>
+              <input type="password" placeholder="Password" />
+            </div>
+            <div>
+              <input type="password" placeholder="Confirm Password" />
+            </div>
           </div>
 
-          <button onChange={() => setSignupView(1)}>Next</button>
-        </form>
-
-        <form
-          onSubmit={handleSignup}
-          className="form signup2"
-          style={
-            signupView < 1
-              ? {}
-              : signupView === 1
-              ? { right: "0%" }
-              : { right: "200%" }
-          }
-        >
-          <div>
-            <input
-              value={password}
-              type="password"
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-            />
+          <div
+            className="inputGroup3"
+            style={
+              signupView === 2
+                ? { right: "0%" }
+                : signupView > 2
+                ? { right: "200%" }
+                : {}
+            }
+          >
+            <div>
+              <input type="text" placeholder="Name" />
+            </div>
+            <div>
+              <input type="text" placeholder="Username" />
+            </div>
           </div>
 
-          <div>
-            <input
-              value={confirmPassword}
-              type="password"
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              placeholder="Confirm Password"
-            />
-          </div>
-          <button onChange={() => setSignupView(2)}>Next</button>
-        </form>
-
-        <form
-          onSubmit={handleSignup}
-          className="form signup3"
-          style={
-            signupView === 2
-              ? { right: "0%" }
-              : signupView > 2
-              ? { right: "200%" }
-              : {}
-          }
-        >
-          <div>
-            <input
-              value={name}
-              type="text"
-              placeholder="Enter your name"
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <input
-              value={username}
-              type="text"
-              placeholder="Choose a username"
-              onChange={(e) => setUsername(e.target.value)}
-            />
-          </div>
-          <button onChange={() => setSignupView(3)}>Next</button>
-        </form>
-
-        <form
-          onSubmit={handleSignup}
-          className="form signup4"
-          style={signupView === 3 ? { right: "0%" } : {}}
-        >
-          <div style={{ textAlign: "center" }}>
-            <div style={{ height: 200, width: 200 }} className="imgPreviewer">
+          <div
+            className="inputGroup4"
+            style={
+              signupView === 3
+                ? { right: "0%" }
+                : signupView > 3
+                ? { right: "200%" }
+                : {}
+            }
+          >
+            <div
+              className="imagePreviewer"
+              style={!profileImage ? { border: "1px solid black" } : {}}
+            >
+              <h4 style={profileImage ? { display: "none" } : {}}>Preview</h4>
               <img
-                style={profileImage ? {} : { zIndex: -1 }}
                 src={profileImage}
                 alt="profile"
+                style={!profileImage ? { zIndex: -1 } : {}}
               />
             </div>
             <input
@@ -228,18 +220,20 @@ export default function Authentication({ user, setUser }) {
               accept="image/*"
               onChange={imagePreviewHandler}
             />
-            <h3>{!profileImage ? "Choose a profile image" : ""}</h3>
           </div>
-          <button onChange={() => setSignupView(4)}>Next</button>
-        </form>
+        </div>
 
-        <h4
-          style={{ paddingTop: "20px" }}
-          onClick={() => setTimeout(() => setLoginView(true), 500)}
-        >
-          Already have an account? Login
-        </h4>
-      </div>
+        <div className="btnAndText">
+          <button onClick={() => setSignupView(signupView + 1)}>
+            {signupView !== 3 ? "Next" : "Sign Up"}
+          </button>
+          <h4>
+            <span onClick={() => setLoginView(true)}>
+              Already have an account? Login
+            </span>
+          </h4>
+        </div>
+      </form>
     </div>
   );
 }
