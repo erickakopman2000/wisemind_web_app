@@ -1,13 +1,15 @@
 import firebase from "./firebase";
 
-export const signup = (email, pass, notify_email_verification) => {
+export const signup = (email, pass, sendData, notify_email_verification) => {
   firebase
     .auth()
     .createUserWithEmailAndPassword(email, pass)
     .then(() => {
       let user = firebase.auth().currentUser;
 
-      //* Email verification
+      sendData(user.uid);
+
+      // Email verification
       if (user !== null && user.emailVerified === false)
         user.sendEmailVerification().then(() => notify_email_verification());
     })

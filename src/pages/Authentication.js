@@ -8,12 +8,12 @@ export default function Authentication({ user, setUser }) {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [profileImage, setProfileImage] = useState(null);
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
   const [confirmEmail, setConfirmEmail] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loginView, setLoginView] = useState(true);
 
   const [signupView, setSignupView] = useState(0);
-  console.log(signupView);
 
   let message;
 
@@ -29,7 +29,7 @@ export default function Authentication({ user, setUser }) {
       break;
     case 3:
       message = "Lastly, pick a profile picture.";
-
+      break;
     default:
       break;
   }
@@ -54,34 +54,68 @@ export default function Authentication({ user, setUser }) {
   const imagePreviewHandler = (e) => {
     const reader = new FileReader();
     reader.onload = () => {
-      if (reader.readyState === 2) setProfileImage(reader.result);
+      if (reader.readyState === 2) setProfileImagePreview(reader.result);
     };
     reader.readAsDataURL(e.target.files[0]);
+    setProfileImage(e.target.files[0]);
   };
 
   const handleSignup = (e) => {
     e.preventDefault();
-    // const confirmed =
-    //   email === confirmEmail && password === confirmPassword ? true : false;
 
-    // if (confirmed) {
-    //   signup(email, password, () => {
-    //     console.log("Verification email sent!");
-    //     let user = firebase.auth().currentUser;
-    //     setUser(user);
-    //     localStorage.setItem("currentUser", JSON.stringify(user));
-    //     setTimeout(() => window.open("/", "_self"), 500);
-    //   });
-    // } else {
-    //   if (email !== confirmEmail && password !== confirmPassword)
-    //     window.alert("Your emails and passwords don't match!");
-    //   else if (password !== confirmPassword)
-    //     window.alert("Your passwords don't match!");
-    //   else window.alert("Your emails don't match!");
-    // }
-    let myint = signupView + 1;
-    setSignupView(myint);
-    console.log(signupView);
+    if (signupView !== 3) {
+      setSignupView(signupView + 1);
+    } else {
+      const emailConfirmed = email === confirmEmail;
+      const passwordConfirmed = password === confirmPassword;
+
+      const confirmed = emailConfirmed && passwordConfirmed;
+
+      if (confirmed) {
+        const sendData = (uid) => {
+          // upload image
+          let imageUpload = firebase
+            .storage()
+            .ref(`${username}/profileImages/${profileImage.name}`)
+            .put(profileImage);
+
+          // get upload confirmation and upload remaining data
+          imageUpload.on(
+            "state_changed",
+            (snapshot) => {},
+            (err) => {
+              console.log(err);
+            },
+            () => {
+              let data;
+              firebase
+                .storage()
+                .ref(`${username}/profileImages`)
+                .child(profileImage.name)
+                .getDownloadURL()
+                .then((url) => {
+                  data = {
+                    uid,
+                    email,
+                    password,
+                    name,
+                    username,
+                    profileImageURL: url,
+                  };
+                  firebase.firestore().collection("users").doc(uid).set(data);
+                });
+            }
+          );
+        };
+
+        signup(email, password, sendData, () =>
+          console.log("Verification email was sent.")
+        );
+      }
+    }
+
+    const confirmed =
+      email === confirmEmail && password === confirmPassword ? true : false;
   };
 
   return (
@@ -139,7 +173,7 @@ export default function Authentication({ user, setUser }) {
       <form
         className="form signupForm"
         style={loginView ? { right: "-200%" } : { marginTop: "-534px" }}
-        onSubmit={handleLogin}
+        onSubmit={handleSignup}
       >
         <h1>Sign Up</h1>
 
@@ -151,10 +185,18 @@ export default function Authentication({ user, setUser }) {
             style={signupView === 0 ? {} : { left: "-200%" }}
           >
             <div>
-              <input type="email" placeholder="Email" />
+              <input
+                type="email"
+                placeholder="Email"
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div>
-              <input type="text" placeholder="Confirm Email" />
+              <input
+                type="text"
+                placeholder="Confirm Email"
+                onChange={(e) => setConfirmEmail(e.target.value)}
+              />
             </div>
           </div>
 
@@ -169,10 +211,18 @@ export default function Authentication({ user, setUser }) {
             }
           >
             <div>
-              <input type="password" placeholder="Password" />
+              <input
+                type="password"
+                placeholder="Password"
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </div>
             <div>
-              <input type="password" placeholder="Confirm Password" />
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                onChange={(e) => setConfirmPassword(e.target.value)}
+              />
             </div>
           </div>
 
@@ -187,10 +237,18 @@ export default function Authentication({ user, setUser }) {
             }
           >
             <div>
-              <input type="text" placeholder="Name" />
+              <input
+                type="text"
+                placeholder="Name"
+                onChange={(e) => setName(e.target.value)}
+              />
             </div>
             <div>
-              <input type="text" placeholder="Username" />
+              <input
+                type="text"
+                placeholder="Username"
+                onChange={(e) => setUsername(e.target.value)}
+              />
             </div>
           </div>
 
@@ -210,7 +268,7 @@ export default function Authentication({ user, setUser }) {
             >
               <h4 style={profileImage ? { display: "none" } : {}}>Preview</h4>
               <img
-                src={profileImage}
+                src={profileImagePreview}
                 alt="profile"
                 style={!profileImage ? { zIndex: -1 } : {}}
               />
@@ -224,9 +282,7 @@ export default function Authentication({ user, setUser }) {
         </div>
 
         <div className="btnAndText">
-          <button onClick={() => setSignupView(signupView + 1)}>
-            {signupView !== 3 ? "Next" : "Sign Up"}
-          </button>
+          <button>{signupView !== 3 ? "Next" : "Sign Up"}</button>
           <h4>
             <span onClick={() => setLoginView(true)}>
               Already have an account? Login
